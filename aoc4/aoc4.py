@@ -10,8 +10,29 @@ except ImportError or ModuleNotFoundError:
 
 
 
+def parse_line(line):
+    _, nums = line.split(': ')
+    winning, have = nums.split(' | ')
+    winning = re.findall(r'\d+', winning)
+    have = re.findall(r'\d+', have)
+
+    return winning, have
+
+def get_score(win, own):
+    matches = set(win).intersection(set(own))
+
+    return 2 ** (len(matches) - 1) if len(matches) > 0 else 0
+    
+
 def aoc(data):
-    pass
+    score = 0
+    for i, line in enumerate(data):
+        winning, have = parse_line(line)
+        s = get_score(winning, have)
+        # print(f'Score for line {i + 1} = {s}')
+        score += s
+
+    return score       
 
 
 
