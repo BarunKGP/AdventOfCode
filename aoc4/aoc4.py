@@ -20,19 +20,27 @@ def parse_line(line):
 
 def get_score(win, own):
     matches = set(win).intersection(set(own))
+    
+    # Part 1      
+    # return 2 ** (len(matches) - 1) if len(matches) > 0 else 0
 
-    return 2 ** (len(matches) - 1) if len(matches) > 0 else 0
+   # Part 2 
+    return len(matches)
     
 
 def aoc(data):
-    score = 0
+    # score = 0
+    score = {i: 1 for i in range(1, len(data) + 1)}
     for i, line in enumerate(data):
         winning, have = parse_line(line)
         s = get_score(winning, have)
-        # print(f'Score for line {i + 1} = {s}')
-        score += s
+        for x in range(1, s + 1):
+            score[i + x + 1] += score[i + 1] 
 
-    return score       
+        # print(f'Score for line {i + 1} = {s}')
+        # score += s 
+
+    return sum(score.values())
 
 
 
