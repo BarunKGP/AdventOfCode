@@ -23,8 +23,9 @@ def parse(data):
 
 def get_type(card):
     assert len(card) == 5, f"invalid hand, len = {len(card)}"
-    
-    count = Counter(card)
+    super_card = modify_joker(card)
+
+    count = Counter(super_card)
     value_of = {
         'FIVE_OF_A_KIND': 1,
         'FOUR_OF_A_KIND': 2,
@@ -56,8 +57,26 @@ def get_type(card):
     else:
         return value_of['HIGH_CARD']
 
+
+def modify_joker(card):
+    jokers = len(re.findall(f'J', card))
+    if jokers == 0:
+        return card
+
+    mod_card = [c for c in card if c != 'J']
+    if len(mod_card) == 0: # All jokers
+        return 'AAAAA'
+
+    count = Counter(mod_card)
+    most_frequent, max_freq = count.most_common(1)[0]
+
+    super_card = re.sub(r'J', most_frequent, card)
+    return super_card
+
+
+
 def compare_same_type(c1, c2):
-    values_of = {c: i for i, c in enumerate('23456789TJQKA')}
+    values_of = {c: i for i, c in enumerate('J23456789TQKA')} # 23456789TJQKA --> for part 1
     for a, b in zip(c1, c2):
         if values_of[a] == values_of[b]:
             continue
